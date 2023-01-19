@@ -1,41 +1,55 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Card from '../components/Card.astro';
+export const appName:string = 'Super Squares';
+const alphaRange = 'ABCDEFGHIJ';
+const range = [0,1,2,3,4,5,6,7,8,9];
+const minDigit = Math.min(...range);
+const maxDigit = Math.max(...range);
 ---
 
-<Layout title="Welcome to Astro.">
+<Layout title={appName}>
 	<main>
-		<h1>Welcome to <span class="text-gradient">Astro</span></h1>
+		<h1>{appName}</h1>
 		<p class="instructions">
-			To get started, open the directory <code>src/pages</code> in your project.<br />
-			<strong>Code Challenge:</strong> Tweak the "Welcome to Astro" message above.
+			Assign squares to people then, when you're ready, fill in the grid with randomly-selected score digits for each team.
 		</p>
-		<ul role="list" class="link-card-grid">
-			<Card
-				href="https://docs.astro.build/"
-				title="Documentation"
-				body="Learn how Astro works and explore the official API docs."
-			/>
-			<Card
-				href="https://astro.build/integrations/"
-				title="Integrations"
-				body="Supercharge your project with new frameworks and libraries."
-			/>
-			<Card
-				href="https://astro.build/themes/"
-				title="Themes"
-				body="Explore a galaxy of community-built starter themes."
-			/>
-			<Card
-				href="https://astro.build/chat/"
-				title="Community"
-				body="Come say hi to our amazing Discord community. ❤️"
-			/>
-		</ul>
+		<table class="squares">
+			<thead><tr><th></th>{range.map(i => <th>{alphaRange[i]}</th>)}</tr></thead>
+			<tbody>
+				{ range.map((i) => 
+					<tr>
+						<th>{i}</th>
+						{ range.map((j) => <td>
+							<button data-column={alphaRange[j]} data-row={i}>X</button>
+						</td>) }
+					</tr>
+				) }
+			</tbody>
+		</table>
 	</main>
 </Layout>
 
-<style>
+<script>
+	const buttons = document.querySelectorAll('button');
+	buttons.forEach((button) =>
+		 button.addEventListener('click', (e) => {
+			const el = e.target;
+			console.log(`hi from ${el.getAttribute('data-column')}${el.getAttribute('data-row')}`);
+		})
+	);
+</script>
+
+<style lang="scss">
+	.squares {
+		padding: 0.2rem;
+		&, & td {
+			border: 1px solid #222;
+		}
+		td {
+
+		}
+	}
 	main {
 		margin: auto;
 		padding: 1.5rem;
@@ -45,13 +59,6 @@ import Card from '../components/Card.astro';
 		font-size: 3rem;
 		font-weight: 800;
 		margin: 0;
-	}
-	.text-gradient {
-		background-image: var(--accent-gradient);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-size: 400%;
-		background-position: 0%;
 	}
 	.instructions {
 		line-height: 1.6;
